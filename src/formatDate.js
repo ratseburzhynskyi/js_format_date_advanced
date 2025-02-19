@@ -11,12 +11,17 @@ function formatDate(date, fromFormat, toFormat) {
   const dateParts = date.split(fromFormat[3]);
   const dateIndexes = fromFormat.slice(0, -1);
 
-  const longYearIndex = dateIndexes.indexOf('YYYY');
+  let longYearIndex = dateIndexes.indexOf('YYYY');
   const shortYearIndex = dateIndexes.indexOf('YY');
 
-  if (longYearIndex !== -1) {
+  if (longYearIndex !== -1 && shortYearIndex === -1) {
     dateParts[shortYearIndex] = dateParts[longYearIndex].slice(-2);
-  } else if (shortYearIndex !== -1) {
+  } else if (shortYearIndex !== -1 && longYearIndex === -1) {
+    if (toFormat.includes('YYYY')) {
+      longYearIndex = dateIndexes.length;
+      dateIndexes.push('YYYY');
+    }
+
     const year = parseInt(dateParts[shortYearIndex], 10);
 
     dateParts[longYearIndex] =
